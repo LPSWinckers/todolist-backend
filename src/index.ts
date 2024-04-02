@@ -1,25 +1,16 @@
+import cors from 'cors';
 import express from 'express';
-import sqlite3 from 'sqlite3';
+import mainRouter from './routes/index';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = 3000;
 
-const db = new sqlite3.Database(':memory:');
+app.use(cors())
+app.use(express.json());
 
-db.serialize(() => {
-  db.run('CREATE TABLE users (id INT, name TEXT)');
-});
+// Use the main router for all routes
+app.use('/', mainRouter);
 
-app.get('/users', (req, res) => {
-  db.all('SELECT * FROM users', (err, rows) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
-    }
-    res.json(rows);
-  });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });
