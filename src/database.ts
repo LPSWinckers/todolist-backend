@@ -1,4 +1,3 @@
-import exp from 'constants';
 import { MongoClient } from 'mongodb';
 
 const uri = 'mongodb://localhost:27017/todo-list';
