@@ -7,16 +7,17 @@ const router = Router();
 
 router.post('/', async (req: Request, res: Response) => {
     try {
-        const { title, description, completed, timeAdded, expectedTimeFinished, timeToComplete } = req.body;
+        const { title, description, completed, expectedTimeFinished, timeToComplete } = req.body;
         
         // Create the todo object with all parameters
         const todo = {
             title,
             description: description || title,
             completed: completed || false, // default to false if not provided
-            timeAdded : new Date(timeAdded) || new Date(),
+            timeAdded : new Date().getTime(),
             expectedTimeFinished : new Date(expectedTimeFinished) || null,
-            timeToComplete: timeToComplete || null
+            timeToComplete: timeToComplete || null,
+            completedAt: null
         };
 
         // Insert the todo into the database
@@ -50,7 +51,7 @@ router.get('/completed/:id', async (req: Request, res: Response) => {
         .collection('todos')
         .updateOne(
             { _id: new ObjectId(id) },
-            { $set: { completed: true } }
+            { $set: { completed: true, completedAt: new Date().getTime} }
         );
 
     res.json(result);
